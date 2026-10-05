@@ -1,0 +1,8 @@
+{
+  "name": "Kelvin Gig Charts",
+  "short_name": "Gig Charts",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}

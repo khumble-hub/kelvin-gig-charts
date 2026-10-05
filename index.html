@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Kelvin's Gig — Chord Charts</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#ffffff;--fg:#1a1a1a;--dim:#666;--red:#d00000;--card:#f5f5f5;--line:#ddd;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,Helvetica,Arial,sans-serif;}
+#topbar{position:sticky;top:0;z-index:10;display:flex;background:#fff;border-bottom:1px solid var(--line);}
+#topbar button{flex:1;background:none;border:none;color:var(--fg);font-size:20px;padding:14px 0;cursor:pointer;}
+#topbar button:active{background:#eee;}
+#topbar .mid{flex:1.4;font-size:15px;}
+#wrap{max-width:700px;margin:0 auto;padding:12px 14px 60px;}
+h1{font-size:22px;margin:8px 0 2px;}
+.sub{color:var(--dim);font-size:13px;margin-bottom:14px;}
+.idx-block{background:var(--card);border-radius:10px;padding:12px;margin-bottom:8px;}
+.idx-item{display:flex;align-items:center;gap:10px;color:var(--fg);text-decoration:none;}
+.idx-num{color:var(--dim);width:30px;font-size:14px;}
+.idx-title{flex:1;font-size:16px;}
+.keypill{background:var(--red);color:#fff;font-weight:700;font-size:14px;border-radius:20px;padding:3px 12px;}
+.idx-note{width:100%;background:#fff;color:var(--fg);border:1px solid #ccc;border-radius:8px;
+ font-size:14px;padding:8px;margin-top:8px;font-family:inherit;resize:vertical;}
+.idx-note:focus{outline:none;border-color:var(--red);}
+.songhead{margin:6px 0 12px;}
+.songnum{color:var(--dim);font-size:13px;}
+.songhead h2{margin:2px 0 8px;font-size:24px;}
+.keybig{display:inline-block;background:var(--red);color:#fff;font-weight:800;font-size:18px;
+ border-radius:8px;padding:6px 14px;margin-bottom:6px;}
+.meta{color:var(--dim);font-style:italic;font-size:14px;}
+.notes{margin:10px 0 12px;}
+.notes label{display:block;color:var(--dim);font-size:13px;margin-bottom:4px;}
+.notes textarea{width:100%;background:#fff;color:var(--fg);border:1px solid #ccc;border-radius:8px;
+ font-size:15px;padding:10px;font-family:inherit;resize:vertical;}
+.notes textarea:focus{outline:none;border-color:var(--red);}
+.chartbody{background:var(--card);border-radius:10px;padding:12px;}
+.chart{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;line-height:1.65;white-space:pre-wrap;}
+.chart b{color:var(--red);}
+.sp{height:8px;}
+.warn{color:#b00000;font-weight:700;font-size:14px;line-height:1.5;margin:6px 0;
+ border-left:3px solid var(--red);padding-left:8px;}
+#counter{text-align:center;color:var(--dim);font-size:13px;margin-top:18px;}
+.intro-btn{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;color:#fff;border:none;
+ border-radius:22px;font-size:15px;font-weight:700;padding:9px 18px;cursor:pointer;
+ -webkit-tap-highlight-color:transparent;}
+.intro-btn.playing{background:var(--red);}
+.idx-intro{margin:10px 0 2px;}
+.song-intro{margin:8px 0 2px;}
+
+</style></head><body>
+<div id="topbar">
+<button id="prev" aria-label="Previous song">&#8249; Prev</button>
+<button class="mid" id="home">Setlist</button>
+<button id="next" aria-label="Next song">Next &#8250;</button>
+</div>
+<div id="wrap">
+<div id="index">
+<h1>Kelvin's Gig — Setlist</h1>
+<div class="sub">Sat Oct 10, 2026 &middot; 7:00&ndash;10:00 PM &middot; tap a song to open its chart</div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="0"><span class="idx-num">1</span><span class="idx-title">Guitars, Cadillacs</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="0" rows="2" placeholder="Gig notes...">Starts with guitar</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="1"><span class="idx-num">2</span><span class="idx-title">All My Ex&#x27;s Live in Texas</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="1" rows="2" placeholder="Gig notes...">Steel intro</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="2"><span class="idx-num">3</span><span class="idx-title">Crazy Arms</span><span class="keypill">F</span></a><textarea class="idx-note" data-note="2" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="3"><span class="idx-num">4</span><span class="idx-title">Allons Danser Colinda</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="3" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="4"><span class="idx-num">5</span><span class="idx-title">Someday Soon</span><span class="keypill">G</span></a><textarea class="idx-note" data-note="4" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="5"><span class="idx-num">6</span><span class="idx-title">I&#x27;m Down to My Last Cigarette</span><span class="keypill">Bb</span></a><textarea class="idx-note" data-note="5" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="6"><span class="idx-num">7</span><span class="idx-title">Apartment #9</span><span class="keypill">F</span></a><textarea class="idx-note" data-note="6" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="7"><span class="idx-num">8</span><span class="idx-title">Heart Over Mind</span><span class="keypill">G</span></a><textarea class="idx-note" data-note="7" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="8"><span class="idx-num">9</span><span class="idx-title">Tous les soirs</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="8" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="9"><span class="idx-num">10</span><span class="idx-title">Today I Started Loving You Again</span><span class="keypill">E</span></a><textarea class="idx-note" data-note="9" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="10"><span class="idx-num">11</span><span class="idx-title">Country Club</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="10" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="11"><span class="idx-num">12</span><span class="idx-title">Let the Four Winds Blow</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="11" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="12"><span class="idx-num">13</span><span class="idx-title">I&#x27;m So Afraid of Losing You Again</span><span class="keypill">E</span></a><textarea class="idx-note" data-note="12" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="13"><span class="idx-num">14</span><span class="idx-title">Joy to the World</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="13" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="14"><span class="idx-num">15</span><span class="idx-title">Danny&#x27;s Song</span><span class="keypill">E</span></a><textarea class="idx-note" data-note="14" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="15"><span class="idx-num">16</span><span class="idx-title">I&#x27;m Hanging Around</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="15" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="16"><span class="idx-num">17</span><span class="idx-title">Then You Can Tell Me Goodbye</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="16" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="17"><span class="idx-num">18</span><span class="idx-title">Help Me Hold On</span><span class="keypill">E</span></a><textarea class="idx-note" data-note="17" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="18"><span class="idx-num">19</span><span class="idx-title">Amarillo by Morning</span><span class="keypill">D/E</span></a><textarea class="idx-note" data-note="18" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="19"><span class="idx-num">20</span><span class="idx-title">The South&#x27;s Gonna Do It Again</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="19" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="20"><span class="idx-num">21</span><span class="idx-title">You&#x27;re Running Wild</span><span class="keypill">F</span></a><textarea class="idx-note" data-note="20" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="21"><span class="idx-num">22</span><span class="idx-title">Do Me with Love</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="21" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="22"><span class="idx-num">23</span><span class="idx-title">Leavin&#x27; on Your Mind</span><span class="keypill">G</span></a><textarea class="idx-note" data-note="22" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="23"><span class="idx-num">24</span><span class="idx-title">Old Flames</span><span class="keypill">B/C</span></a><textarea class="idx-note" data-note="23" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="24"><span class="idx-num">25</span><span class="idx-title">Pick Me Up on Your Way Down</span><span class="keypill">F#</span></a><textarea class="idx-note" data-note="24" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="25"><span class="idx-num">26</span><span class="idx-title">Satin Sheets</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="25" rows="2" placeholder="Gig notes...">Intro is an odd guitar riff. Not sure if we’ll do that. May just start together.</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="26"><span class="idx-num">27</span><span class="idx-title">Family Tradition</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="26" rows="2" placeholder="Gig notes...">Start together</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="27"><span class="idx-num">28</span><span class="idx-title">Before You Accuse Me</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="27" rows="2" placeholder="Gig notes...">Intro is a guitar riff in A</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="28"><span class="idx-num">29</span><span class="idx-title">Amanda</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="28" rows="2" placeholder="Gig notes...">Intro is an acoustic guitar riff walk down in A</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="29"><span class="idx-num">30</span><span class="idx-title">Lache pas la patate (The Potato Song)</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="29" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="30"><span class="idx-num">31</span><span class="idx-title">Please Release Me</span><span class="keypill">G</span></a><textarea class="idx-note" data-note="30" rows="2" placeholder="Gig notes...">Fiddle intro. 1/5/1.</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="31"><span class="idx-num">32</span><span class="idx-title">Blue Rose Is</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="31" rows="2" placeholder="Gig notes...">Intro together. GGD  GGD </textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="32"><span class="idx-num">33</span><span class="idx-title">I&#x27;d Do It All Over Again</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="32" rows="2" placeholder="Gig notes...">Piano part done on guitar, walk down from the D</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="33"><span class="idx-num">34</span><span class="idx-title">Take It Easy Lovin&#x27; Me</span><span class="keypill">D</span></a><textarea class="idx-note" data-note="33" rows="2" placeholder="Gig notes...">Intro hit A and hold then together on D</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="34"><span class="idx-num">35</span><span class="idx-title">You&#x27;re Stronger Than Me</span><span class="keypill">Ab</span></a><textarea class="idx-note" data-note="34" rows="2" placeholder="Gig notes...">Intro guitar walk up from Ab</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="35"><span class="idx-num">36</span><span class="idx-title">I Fall to Pieces</span><span class="keypill">Bb</span></a><textarea class="idx-note" data-note="35" rows="2" placeholder="Gig notes...">Intro guitar walk up from Bb</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="36"><span class="idx-num">37</span><span class="idx-title">Send Me the Pillow That You Dream On</span><span class="keypill">Eb</span></a><textarea class="idx-note" data-note="36" rows="2" placeholder="Gig notes...">Intro guitar Eb 
+Arpeggios on chorus</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="37"><span class="idx-num">38</span><span class="idx-title">I Can&#x27;t Get You Off of My Mind</span><span class="keypill">C</span></a><textarea class="idx-note" data-note="37" rows="2" placeholder="Gig notes...">Intro Fiddle  4 4 1 1 1 5 1
+Hank Williams feel</textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="38"><span class="idx-num">39</span><span class="idx-title">Unwound</span><span class="keypill">A</span></a><textarea class="idx-note" data-note="38" rows="2" placeholder="Gig notes..."></textarea></div>
+<div class="idx-block"><a class="idx-item" href="#" data-go="39"><span class="idx-num">40</span><span class="idx-title">Four or Five Times</span><span class="keypill">Eb</span></a><textarea class="idx-note" data-note="39" rows="2" placeholder="Gig notes..."></textarea></div>
+</div>
+<section class="song" id="song-0" style="display:none"><div class="songhead"><div class="songnum">#1</div><h2>Guitars, Cadillacs</h2><div class="keybig">Key of A</div><div class="meta">R vocals, Dwight Yoakam</div></div><div class="notes"><label>Gig notes</label><textarea data-note="0" rows="3" placeholder="Reminders for this song...">Starts with guitar</textarea></div><div class="chartbody"><div class="chart">Upbeat honky-tonk, ~150 bpm</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | A | A | / E / F# / G# | (4-bar guitar intro)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]Girl, you taught me how to hurt real bad and [E]cry myself to sleep</div>
+<div class="chart">[A]You showed me how this town can shatter [E]dreams</div>
+<div class="chart">[A]Another lesson &#x27;bout a naive fool that came to [E]Babylon</div>
+<div class="chart">And [E7]found that the pie don&#x27;t taste so sweet, now it&#x27;s [A]</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]Guitars, Cadillacs, hillbilly [E]music</div>
+<div class="chart">[A]And lonely, lonely streets that I call [E]home — yeah, my</div>
+<div class="chart">[A]Guitars, Cadillacs, hillbilly [E]music</div>
+<div class="chart">[E7]Is the only thing that keeps me [A]hanging on</div>
+<div class="sp"></div>
+<div class="chart"><b>BREAK:</b> | A | A | E | E | A | A | / E / F# / G# | — 2x (guitar solo 1st, fiddle solo 2nd)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[A]There ain&#x27;t no glamour in this tinsel land of lost and [E]wasted lives</div>
+<div class="chart">[A]And painful scars are all that&#x27;s left of [E]me</div>
+<div class="chart">[A]Ought to thank you girl for teaching me brand new ways to be [E]cruel</div>
+<div class="chart">If [E7]I can find my mind, now I guess I&#x27;ll just [A]leave — and it&#x27;s</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> final chorus, tag last line: [E7]keeps me hanging [A]on — [E]/[F#]/[G#] walk to [A]</div></div></section>
+<section class="song" id="song-1" style="display:none"><div class="songhead"><div class="songnum">#2</div><h2>All My Ex&#x27;s Live in Texas</h2><div class="keybig">Key of A</div><div class="meta">R vocals, George Strait</div></div><div class="notes"><label>Gig notes</label><textarea data-note="1" rows="3" placeholder="Reminders for this song...">Steel intro</textarea></div><div class="chartbody"><div class="chart">Medium shuffle</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | A | E | E7 | E | E7 | A |</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]All my Ex&#x27;s live in [E]Texas [E7]</div>
+<div class="chart">[E]And Texas is the [E7]place I&#x27;d really [Bm]love to [Bb]be [A]</div>
+<div class="chart">[A]All my Ex&#x27;s live in [E]Texas [E7]</div>
+<div class="chart">And [E]that&#x27;s why I [E7]hang my hat in Tennes[A]see</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]Rosanna&#x27;s down in Texarkana, wanted me to [Bm]push her broom</div>
+<div class="chart">[E]Sweet Eileen&#x27;s in Abilene, she forgot I [E7]hung the [E]moon [A]</div>
+<div class="chart">[A]And Allison&#x27;s in Galveston, somehow lost her [Bm]sanity</div>
+<div class="chart">[B7]And Dimples, who now lives in Temple&#x27;s got the law lookin&#x27; for [E]me</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>SOLO:</b> | A | E | E7 | E | E7 | A |</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[A]I remember that ole Frio River where I learned to [Bm]swim</div>
+<div class="chart">[E]But it brings to mind another time where I [E7]wore my [E]welcome [A]thin</div>
+<div class="chart">[A]By transcendental meditation I go there each [Bm]night</div>
+<div class="chart">[B7]But I always come back to myself, long before [E]daylight</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 3 (same as chorus 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG:</b></div>
+<div class="chart">[E]Some folks think I&#x27;m [E7]hidin&#x27;, it&#x27;s been [E]rumored that I [E7]died</div>
+<div class="chart">But [E]I&#x27;m alive and [A]well in Tennessee</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-2" style="display:none"><div class="songhead"><div class="songnum">#3</div><h2>Crazy Arms</h2><div class="keybig">Key of F</div><div class="meta">W vocals, Ray Price</div></div><div class="notes"><label>Gig notes</label><textarea data-note="2" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">4/4 shuffle — the Ray Price beat</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | F | F | C7 | F | (steel intro)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[F]Now blue ain&#x27;t the [F7]word for the [Bb]way that I [F]feel</div>
+<div class="chart">There&#x27;s a [C7]storm brewin&#x27; in this heart of mine</div>
+<div class="chart">[F]This ain&#x27;t no [F7]crazy dream, I [Bb]know that it&#x27;s [F]real</div>
+<div class="chart">You&#x27;re [C7]someone else&#x27;s love now you&#x27;re [F]not mine</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[F]Crazy [F7]arms that reach to [Bb]hold somebody [F]new</div>
+<div class="chart">But my yearnin&#x27; heart keeps sayin&#x27; [C7]you&#x27;re not mine</div>
+<div class="chart">[F]My troubled [F7]mind knows [Bb]soon to another you&#x27;ll be [F]wed</div>
+<div class="chart">And that&#x27;s why [C7]I&#x27;m lonely all the [F]time</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[F]So [F7]please take these [Bb]treasured dreams I had for [F]you and me</div>
+<div class="chart">And [C7]take all the love I thought was mine</div>
+<div class="chart">[F]Someday my [F7]crazy arms may [Bb]hold somebody [F]new</div>
+<div class="chart">And that&#x27;s why [C7]I&#x27;m lonely all the [F]time</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="chart"><b>OUTRO:</b> tag last line, end on [F]</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-3" style="display:none"><div class="songhead"><div class="songnum">#4</div><h2>Allons Danser Colinda</h2><div class="keybig">Key of A</div><div class="meta">W vocals, Cajun traditional</div></div><div class="notes"><label>Gig notes</label><textarea data-note="3" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Standard Cajun two-step (I–V) — tempo/feel TBD</div>
+<div class="warn">⚠ Standard I–V (A–E) Cajun two-step chart below; exact chord placement and turnarounds vary by version — confirm feel at the gig.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | A | E | A | E | (accordion/fiddle intro)</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (French):</div>
+<div class="chart">[A]Allons danser Colinda</div>
+<div class="chart">[A]Danser collé Colinda</div>
+<div class="chart">[A]Pendant ta mère est pas [E]là</div>
+<div class="chart">Pour faire fâcher les vieilles [A]femmes</div>
+<div class="chart">[A]C&#x27;est pas tout le monde qui peut [E]danser</div>
+<div class="chart">Toutes les vieilles valses des vieux [A]temps</div>
+<div class="chart">[A]Pendant ta mère est pas [E]là</div>
+<div class="chart">Allons danser Co[A]linda</div>
+<div class="sp"></div>
+<div class="chart">VERSE (English, same changes):</div>
+<div class="chart">[A]Colinda was the prettiest girl in [E]all the bayou land</div>
+<div class="chart">[A]And all the boys would dance with her and [E]try to win her hand</div>
+<div class="chart">[A]Her mother would always chaperon Co[E]linda every night</div>
+<div class="chart">[A]She did not want them Cajun boys to [E]hold her daughter [A]tight</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="chart"><b>OUTRO:</b> | A | E | A | (fiddle tag)</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-4" style="display:none"><div class="songhead"><div class="songnum">#5</div><h2>Someday Soon</h2><div class="keybig">Key of G</div><div class="meta">T vocals, Suzy Bogguss</div></div><div class="notes"><label>Gig notes</label><textarea data-note="4" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Mid-tempo country, walking bass</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | Am7 | D7 | G Gsus | G |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[G]There&#x27;s a [G/F#]young man that I [Em]know whose [C]age is twenty-[G]one</div>
+<div class="chart">[Bm]Comes from down in southern Colo[C]rado [D7]</div>
+<div class="chart">[G]Just out of the service, he&#x27;s [Em]lookin&#x27; for his [C]fun [G]</div>
+<div class="chart">[Am7]Someday [D7]soon, goin&#x27; with him some[G]day soon</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[G]My parents can not [Em]stand him &#x27;cause he [C]rides the rod[G]eo</div>
+<div class="chart">[Bm]My father says that he will leave me [C]cryi[D7]n&#x27;</div>
+<div class="chart">[G]I would follow [Em]him right down the [C]roughest road I [G]know</div>
+<div class="chart">[Am7]Someday [D7]soon, goin&#x27; with him some[G]day soon</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D7]But when he comes to call, my pa ain&#x27;t got a [C]good word to [G]say</div>
+<div class="chart">[Em]Guess it&#x27;s &#x27;cause he&#x27;s just as wild in his [A7]younger [D7]days [A7] [D7]</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same as verse 1):</div>
+<div class="chart">[G]So blow, you old Blue [Em]Northern, [C]blow my love to [G]me</div>
+<div class="chart">[Bm]He&#x27;s ridin&#x27; in tonight from Cali[C]forn[D7]ia</div>
+<div class="chart">[G]He loves his damned old [Em]rodeo as [C]much as he loves [G]me</div>
+<div class="chart">[Am7]Someday [D7]soon, goin&#x27; with him some[G]day soon</div>
+<div class="sp"></div>
+<div class="chart">INSTRUMENTAL (verse changes)</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="chart">VERSE 4 (same as verse 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b></div>
+<div class="chart">[Am7]Someday [D7]soon, goin&#x27; with him some[G]day soon</div>
+<div class="chart">[Am7]Someday [D]soon, goin&#x27; with him some[G]day [Em]soon [C] [D7] [G]</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-5" style="display:none"><div class="songhead"><div class="songnum">#6</div><h2>I&#x27;m Down to My Last Cigarette</h2><div class="keybig">Key of Bb</div><div class="meta">T vocals, k.d. lang</div></div><div class="notes"><label>Gig notes</label><textarea data-note="5" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Slow country ballad, Shadowland CD version — one verse open for solo</div>
+<div class="warn">⚠ Chord placement reconstructed from chord-detection data (Gm and Dm passing chords on the recording); confirm intro/turnaround against the Shadowland track at the gig.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | Bb | F | Bb | (strings/steel intro)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[Bb]The coffee&#x27;s all gone and my eyes [F]burn like fire</div>
+<div class="chart">It&#x27;s [Eb]way past the hour when most folks re[Bb]tire</div>
+<div class="chart">You [F]told me you&#x27;d call me but you haven&#x27;t [Bb]yet</div>
+<div class="chart">And I&#x27;m [F]down to my last ciga[Bb]rette</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[Gm]I&#x27;m down to my last [Eb]cigarette</div>
+<div class="chart">For I [Bb]know what made you for[F]get</div>
+<div class="chart">You&#x27;re [Bb]still out there [Eb]somewhere</div>
+<div class="chart">With [Bb]someone you [F]met</div>
+<div class="chart">And I&#x27;m [Dm]down to my [Bb]last [F]ciga[Bb]rette</div>
+<div class="sp"></div>
+<div class="chart"><b>SOLO:</b> one full verse of changes, no vocals</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[Bb]I can&#x27;t leave this room, you might call while I&#x27;m [F]gone</div>
+<div class="chart">The [Eb]minutes seem like hours, it soon will be [Bb]dawn</div>
+<div class="chart">And [F]on top of all of my tears and re[Bb]grets</div>
+<div class="chart">I&#x27;m [F]down to my last ciga[Bb]rette</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1, 2nd ending):</div>
+<div class="chart">[Gm]I&#x27;m down to my last [Eb]cigarette</div>
+<div class="chart">And I&#x27;m [Bb]trying so hard to for[F]get</div>
+<div class="chart">But you&#x27;re [Bb]still out there [Eb]somewhere</div>
+<div class="chart">With [Bb]someone you [F]met</div>
+<div class="chart">And I&#x27;m [Dm]down to my [Bb]last [F]ciga[Bb]rette</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG:</b> [F]Oh, I&#x27;m down to my last ciga[Bb]rette</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-6" style="display:none"><div class="songhead"><div class="songnum">#7</div><h2>Apartment #9</h2><div class="keybig">Key of F</div><div class="meta">D vocals, Tammy Wynette</div></div><div class="notes"><label>Gig notes</label><textarea data-note="6" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Slow country ballad</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | F | C7 | F | (steel intro)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[F]Just follow the stairway</div>
+<div class="chart">[C7]To this lonely world of mine</div>
+<div class="chart">[F7]You&#x27;ll find me waiting [Bb]here</div>
+<div class="chart">[C7]In apartment number [F]nine</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[Bb]Loneliness surrounds me</div>
+<div class="chart">[C7]Without your arms around [F]me</div>
+<div class="chart">[F7]And the sun will never [Bb]shine</div>
+<div class="chart">[C7]In apartment number [F]nine</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[Bb]Not so very long ago</div>
+<div class="chart">[C7]You walked away from [F]me</div>
+<div class="chart">[F7]And after all the plans we [Bb]made</div>
+<div class="chart">[C7]You decided to fly [F]free</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same as verse 1):</div>
+<div class="chart">[Bb]I keep waiting in this lonely room</div>
+<div class="chart">[C7]Just in case you change your [F]mind</div>
+<div class="chart">[F7]You&#x27;ll find me waiting [Bb]here</div>
+<div class="chart">[C7]In apartment number [F]nine</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 3 (same as chorus 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG:</b> No, the [F]sun will never shine</div>
+<div class="chart">In apartment number [F]nine [C7] [F]</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-7" style="display:none"><div class="songhead"><div class="songnum">#8</div><h2>Heart Over Mind</h2><div class="keybig">Key of G</div><div class="meta">D vocals, Mel Tillis</div></div><div class="notes"><label>Gig notes</label><textarea data-note="7" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Mid-tempo country</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | G | A7 | C | D7 | G |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[G]I love you so much that I [A7]can&#x27;t leave you</div>
+<div class="chart">[C]Even though my [D7]mind tells me I [G]should</div>
+<div class="chart">[A7]But then you make me think you really want me</div>
+<div class="chart">[C]Then all my [D7]thoughts of leaving do no [G]good</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">You&#x27;ve got me [G]heart over mind, worried all the [G7]time</div>
+<div class="chart">[C]Knowing you will always be the same</div>
+<div class="chart">[D7]You&#x27;ll keep hurting me I know but I just can&#x27;t let you go</div>
+<div class="chart">Cause my [G]heart won&#x27;t let my love for you change</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[G]Now friends tell me they [A7]see you out with others</div>
+<div class="chart">[C]And in my [D7]heart I try hard to [G]forget</div>
+<div class="chart">[A7]But you come home and tell me you love me</div>
+<div class="chart">[C]And I still [D7]hope there&#x27;s some chance for us [G]yet</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-8" style="display:none"><div class="songhead"><div class="songnum">#9</div><h2>Tous les soirs</h2><div class="keybig">Key of D</div><div class="meta">W&amp;D vocals, Cajun traditional</div></div><div class="notes"><label>Gig notes</label><textarea data-note="8" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">3/4 Cajun waltz — vocal melody and lyrics per Wade&#x27;s emailed version</div>
+<div class="warn">⚠ Uses Wade&#x27;s emailed version — standard chart below; confirm arrangement at the gig.</div>
+<div class="warn">⚠ Lyrics not charted — the standard published lyric could not be verified; sing from Wade&#x27;s emailed version.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | D | D | G | G | D | D | A7 | D | (fiddle intro, 2x)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE:</b> (vocal over standard Cajun waltz changes)</div>
+<div class="chart">| D . . | D . . | G . . | G . . |</div>
+<div class="chart">| D . . | D . . | A7 . . | D . . |</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b> (same changes as verse)</div>
+<div class="chart">| D . . | D . . | G . . | G . . |</div>
+<div class="chart">| D . . | D . . | A7 . . | D . . |</div>
+<div class="sp"></div>
+<div class="chart"><b>BREAK:</b> (instrumental — verse changes, fiddle/accordion)</div>
+<div class="chart"><b>OUTRO:</b> | D . . | A7 . . | D . . |</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-9" style="display:none"><div class="songhead"><div class="songnum">#10</div><h2>Today I Started Loving You Again</h2><div class="keybig">Key of E</div><div class="meta">R vocals, Merle Haggard</div></div><div class="notes"><label>Gig notes</label><textarea data-note="9" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Slow country ballad</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | E | A | E | B7 | E | (steel intro)</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[E]Today I started [A]loving you a[E]gain</div>
+<div class="chart">[E]I&#x27;m right back where I&#x27;ve [A]really always [E]been</div>
+<div class="chart">[E]I got over you just [E7]long enough to let my [A]heartache [E]mend</div>
+<div class="chart">[E]Then today I started [B7]loving you a[E]gain</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[E]What a fool I was to think I could [A]get [E]by</div>
+<div class="chart">[E]With only these few [A]million tears I [B7]cried</div>
+<div class="chart">[E]I should have known the [A]worst was yet to [E]come</div>
+<div class="chart">[E]And that cryin&#x27; time for [B7]me had just be[E]gun</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same as chorus 1)</div>
+<div class="chart"><b>OUTRO:</b> repeat last line — [E]Then today I started [B7]loving you a[E]gain</div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="chart"># Gig Charts — Sat Oct 10, 2026 — Batch 2 (songs 11–20)</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-10" style="display:none"><div class="songhead"><div class="songnum">#11</div><h2>Country Club</h2><div class="keybig">Key of D</div><div class="meta">R vocals, Travis Tritt</div></div><div class="notes"><label>Gig notes</label><textarea data-note="10" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Uptempo honky-tonk. Recorded in E; charted in D per set key.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] (4 bars — signature guitar lick over D)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]I took a double take out on the interstate</div>
+<div class="chart">[G]When I saw her makin&#x27; eyes at [D]me</div>
+<div class="chart">[D]So I followed her down the clubhouse drive</div>
+<div class="chart">Past the [E7]pool on the 18th [A7]green</div>
+<div class="chart">In the [D]parkin&#x27; lot, I said it&#x27;s mighty hot</div>
+<div class="chart">[G]Maybe I could buy you a [D]beer</div>
+<div class="chart">She said I&#x27;m [G]glad you [G#dim]asked — but I&#x27;ll [D/A]have to [B7]pass</div>
+<div class="chart">&#x27;Cause only [E7]members are al[A7]lowed in [D]here... and I said</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Well I&#x27;m a member of a [G]country club</div>
+<div class="chart">Country music is [D]what I love</div>
+<div class="chart">I drive an old Ford [A7]pick-up truck</div>
+<div class="chart">I do my drinkin&#x27; from a [D]Dixie cup</div>
+<div class="chart">Yea I&#x27;m a bona-fide [G]dancin&#x27; fool</div>
+<div class="chart">I shoot a mighty mean [D]game of pool</div>
+<div class="chart">At any honky-tonk [A7]roadside pub</div>
+<div class="chart">I&#x27;m a member of a [D]country club</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[D]You look so invitin&#x27; — thought it might be excitin&#x27;</div>
+<div class="chart">[G]For a woman with a [D]limousine</div>
+<div class="chart">[D]To go ridin&#x27; around in a beat-up truck</div>
+<div class="chart">With a [E7]man in wore-out [A7]jeans</div>
+<div class="chart">[D]You know it&#x27;s five o&#x27;clock before Friday night</div>
+<div class="chart">[G]This is where the fun [D]begins</div>
+<div class="chart">Don&#x27;t [G]worry &#x27;bout your repu[D]tation</div>
+<div class="chart">&#x27;Cause [A7]you can tell all your [D]friends</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (x2 to end)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-11" style="display:none"><div class="songhead"><div class="songnum">#12</div><h2>Let the Four Winds Blow</h2><div class="keybig">Key of A</div><div class="meta">W vocals, Fats Domino</div></div><div class="notes"><label>Gig notes</label><textarea data-note="11" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">4/4 shuffle feel, New Orleans groove.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [A] ... [C] (quick 2-bar walkup into verse)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]I like the way you [D]walk</div>
+<div class="chart">I like the way you [A]talk</div>
+<div class="chart">Let me hold [E7]yo&#x27; hand</div>
+<div class="chart">Try to under[A]stand</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 2:</b></div>
+<div class="chart">[A]I want a girl like [D]you</div>
+<div class="chart">Tell my [A]troubles to</div>
+<div class="chart">You won&#x27;t be [E7]afraid</div>
+<div class="chart">You heard [A]what I said</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]Let the four winds [D]blow</div>
+<div class="chart">Let &#x27;em blow, let &#x27;em [A]blow</div>
+<div class="chart">From the east to the [Bm]west, [E7]I love you the [A]best</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same as verse 1)</div>
+<div class="chart">VERSE 4 (same as verse 2)</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (2nd time — alternate last two lines):</div>
+<div class="chart">[A]Let the four winds [D]blow</div>
+<div class="chart">Let &#x27;em blow, let &#x27;em [A]blow</div>
+<div class="chart">From the north to the [Bm]south, you just [E7]knocked me [A]out</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [A] (tag and hold)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-12" style="display:none"><div class="songhead"><div class="songnum">#13</div><h2>I&#x27;m So Afraid of Losing You Again</h2><div class="keybig">Key of E</div><div class="meta">W vocals, Charley Pride</div></div><div class="notes"><label>Gig notes</label><textarea data-note="12" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Slow country waltz-ballad feel (3/4).</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [E] [B] [E]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[E]Sometimes I want to throw my arms [A]around you</div>
+<div class="chart">Then I [E]tremble at the thought of giving [B]in</div>
+<div class="chart">[E]Because I know how much it costs to [A]love you</div>
+<div class="chart">And I&#x27;m [E]so afraid [B]of losing you [E]again</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]Being close to you revives the [E]sorrow</div>
+<div class="chart">That wakes me up and tells me I can&#x27;t [B]win</div>
+<div class="chart">[E]I&#x27;d love to wake up in your arms [A]tomorrow</div>
+<div class="chart">But I&#x27;m [E]so afraid [B]of losing you [E]again</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[E]If heaven were to hear my heart&#x27;s [A]confession</div>
+<div class="chart">[E]Wanting you would be my greatest [B]sin</div>
+<div class="chart">[E]But I&#x27;m glad that you&#x27;re no longer my [A]possession</div>
+<div class="chart">&#x27;Cause I&#x27;m [E]so afraid [B]of losing you [E]again</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG / OUTRO:</b></div>
+<div class="chart">But I&#x27;m [E]so afraid [B]of losing you [E]again</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-13" style="display:none"><div class="songhead"><div class="songnum">#14</div><h2>Joy to the World</h2><div class="keybig">Key of D</div><div class="meta">T vocals, Three Dog Night</div></div><div class="notes"><label>Gig notes</label><textarea data-note="13" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Upbeat rock groove.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [C] [C#] [D] (signature slide into &quot;Jeremiah&quot;)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[C] [C#] [D]Jeremiah was a bullfrog</div>
+<div class="chart">[C] [C#] [D]Was a good friend of mine</div>
+<div class="chart">[D]I never under[D7]stood a single [G]word he said</div>
+<div class="chart">But I [D]helped him to [A]drink his [D]wine</div>
+<div class="chart">[G]And he always had some [A]mighty fine [D]wine, singin&#x27;...</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Joy to the world</div>
+<div class="chart">[A]All the boys and [D]girls</div>
+<div class="chart">[D]Joy to the [D7]fishes in the [G]deep blue sea</div>
+<div class="chart">[D]Joy to [A]you and [D]me [C] [C#] [D]</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[C] [C#] [D]If I were the king of the world</div>
+<div class="chart">[C] [C#] [D]Tell you what I&#x27;d do</div>
+<div class="chart">[D]I&#x27;d throw away the [D7]cars and the [G]bars and the wars</div>
+<div class="chart">And [D]make sweet [A]love to [D]you, singin&#x27; now</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same chords):</div>
+<div class="chart">[C] [C#] [D]You know I love the ladies</div>
+<div class="chart">[C] [C#] [D]Love to have my fun</div>
+<div class="chart">[D]I&#x27;m a high-life [D7]flyer and a [G]rainbow rider</div>
+<div class="chart">A [D]straight shootin&#x27; [A]son of a [D]gun</div>
+<div class="chart">[G]I said, a [A]straight shootin&#x27; son of a [D]gun</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart">BRIDGE (record shifts up to E — resolve back to D after):</div>
+<div class="chart">[E]Joy to the [A]world</div>
+<div class="chart">[E]All the boys and [A]girls</div>
+<div class="chart">[E]Joy to the [A]world</div>
+<div class="chart">[E]Joy to you and [A]me</div>
+<div class="chart">(back to D) CHORUS to end</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-14" style="display:none"><div class="songhead"><div class="songnum">#15</div><h2>Danny&#x27;s Song</h2><div class="keybig">Key of E</div><div class="meta">T vocals, Anne Murray</div></div><div class="notes"><label>Gig notes</label><textarea data-note="14" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Gentle folk-ballad. (Anne Murray&#x27;s shorter recording key; charted concert E.)</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [E] (2 bars)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[E]People smile and tell me I&#x27;m the [D]lucky one, [C#m]</div>
+<div class="chart">[F#7]And we&#x27;ve just begun, think I&#x27;m gonna have a [B]son</div>
+<div class="chart">[E]He will be like you and me, as [D]free as a [C#m]dove</div>
+<div class="chart">[F#7]Conceived in love, sun is gonna shine a[B]bove</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]And even though we [B]ain&#x27;t got money</div>
+<div class="chart">[E]I&#x27;m so [E/D#]in love with you [C#m]honey</div>
+<div class="chart">[A]And [B]everything will bring a [E]chain of [E/D#]love [C#m]</div>
+<div class="chart">[A]And in the morning [B]when I rise, bring a tear of</div>
+<div class="chart">[D]joy to my eyes</div>
+<div class="chart">[C#m]And [F#7]tell me everything&#x27;s gonna be all [B]right</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[E]Love a guy who holds the world in a [D]paper [C#m]cup</div>
+<div class="chart">[F#7]Drink it up, love him and he&#x27;ll bring you [B]luck</div>
+<div class="chart">[E]And if you find he helped your mind, better [D]take him [C#m]home</div>
+<div class="chart">[F#7]Don&#x27;t you live alone, try to earn what [B]lover&#x27;s own</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [A] [E] (soft tag)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-15" style="display:none"><div class="songhead"><div class="songnum">#16</div><h2>I&#x27;m Hanging Around</h2><div class="keybig">Key of D</div><div class="meta">D vocals, The Whites</div></div><div class="notes"><label>Gig notes</label><textarea data-note="15" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="warn">⚠ The recording starts in C and modulates UP to D for the final chorus; this chart flattens everything into D throughout for the gig arrangement. Second-verse turnaround from a single transcribed source — listen to the record on the walkup.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] [A] [D]</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]I&#x27;m hanging around hoping you&#x27;ll get lonely</div>
+<div class="chart">[D]I&#x27;m hanging around though you [D7]say we&#x27;re through</div>
+<div class="chart">[G]You&#x27;re telling me now that you&#x27;ll [D]never miss me</div>
+<div class="chart">[D]But I&#x27;m hanging around [A7]just in case you [D]do</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]I wanna be beside you every step you take</div>
+<div class="chart">[D]Every time you turn around I&#x27;ll [D7]be in your way</div>
+<div class="chart">[G]All over you like poison ivy</div>
+<div class="chart">[E]You get the itch, that&#x27;s when you&#x27;ll find me</div>
+<div class="chart">[A] [A#] [A]Here to stay</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 2:</b></div>
+<div class="chart">[A]I&#x27;ll be the melody that haunts your mind</div>
+<div class="chart">[D]Stuck in your memory like a [D7]nursery rhyme</div>
+<div class="chart">[G]Make a fall like Humpty Dumpty</div>
+<div class="chart">[Em]If it takes a [A]month of [A#]Sundays, I&#x27;ve got [B]time</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="chart">CHORUS (final — repeat last line twice):</div>
+<div class="chart">[D]...but I&#x27;m hanging around [A7]just in case you [D]do</div>
+<div class="chart">[D]But I&#x27;m hanging around [A7]just in case you [D]do</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-16" style="display:none"><div class="songhead"><div class="songnum">#17</div><h2>Then You Can Tell Me Goodbye</h2><div class="keybig">Key of D</div><div class="meta">D vocals, Eddy Arnold</div></div><div class="notes"><label>Gig notes</label><textarea data-note="16" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Slow country ballad.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] (2 bars)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]Kiss me each [Bm]morning for a [G]million [A7]years</div>
+<div class="chart">[D]Hold me each [Bm]evening by your [G]si-[A7]de</div>
+<div class="chart">[D]Tell me you [Bm]love me for a [G]million [A7]years</div>
+<div class="chart">[D]If it don&#x27;t [G]work out, [D]if it don&#x27;t [G]work out</div>
+<div class="chart">[D]Then you can [G]tell me good-[A7]bye</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[D]Sweeten my [Bm]coffee with a [G]morning [A7]kiss</div>
+<div class="chart">[D]Soften my [Bm]dreams with your [G]si-[A7]gh</div>
+<div class="chart">[D]After you&#x27;ve [Bm]loved me for a [G]million [A7]years</div>
+<div class="chart">[D]If it don&#x27;t [G]work out, [D]if it don&#x27;t [G]work out</div>
+<div class="chart">[D]Then you can [G]tell me good-[A7]bye</div>
+<div class="sp"></div>
+<div class="chart"><b>BRIDGE:</b></div>
+<div class="chart">[G]If you must go, I won&#x27;t [D]grieve</div>
+<div class="chart">[Bm]If you&#x27;ll [E7]just wait a lifetime [Em]before you [A7]leave</div>
+<div class="chart">[D]But if you must go, I [Bm]won&#x27;t say [G]no[A7]</div>
+<div class="chart">[D]Just so [Bm]we can say that we [G]tri-[A7]ed</div>
+<div class="chart">[D]Tell me you [Bm]love me for a [G]million [A7]years</div>
+<div class="chart">[D]If it don&#x27;t [G]work out, [D]if it don&#x27;t [G]work out</div>
+<div class="chart">[D]Then you can [G]tell me good-[D]bye</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [G]Then you can [D]tell me goodbye (hold and fade)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-17" style="display:none"><div class="songhead"><div class="songnum">#18</div><h2>Help Me Hold On</h2><div class="keybig">Key of E</div><div class="meta">R vocals, Travis Tritt</div></div><div class="notes"><label>Gig notes</label><textarea data-note="17" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Country-soul ballad. Recorded in G; charted in E per set key.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [E] [A/E] [E] [A/E]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[E]Baby, close that suitcase you&#x27;ve been [A/E]packin&#x27;</div>
+<div class="chart">[E]Just sit down and talk to me a [A/E]while</div>
+<div class="chart">[F#m7]I know you tried to tell me [A]what was lackin&#x27;</div>
+<div class="chart">[F#m7]But I guess I must have missed it [B]by a mile</div>
+<div class="chart">[E]Well this time girl, I swear to you I&#x27;ll [A/E]listen</div>
+<div class="chart">[E]Help me understand [A]where I went wrong</div>
+<div class="chart">[E/G#] [F#m7]It&#x27;s hard to find myself in this po[A]sition</div>
+<div class="chart">[F#m7]Scared that I&#x27;ll go crazy [B]once you&#x27;re gone</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[B]Help me [E]hold [A]on to what we had</div>
+<div class="chart">[A]Once our [F#m7]love was [B]strong, it can be [E]again</div>
+<div class="chart">[E]You said it takes [A]two to make love last</div>
+<div class="chart">[A]You were [E/G#]right all [F#m7]along, [B]so help me hold [E]on</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[E]What have I got to do to [A/E]make it better?</div>
+<div class="chart">[E]What have I got to do to [A/E]make you see</div>
+<div class="chart">[F#m7]That even though I promised you [A]forever</div>
+<div class="chart">[F#m7]I never knew how hard that would [B]be</div>
+<div class="chart">[E]I realize I took your love for [A/E]granted</div>
+<div class="chart">[E]But I&#x27;ve learned that love worth havin&#x27; [A]don&#x27;t come free</div>
+<div class="chart">[E/G#] [F#m7]And I&#x27;ll pay any price it takes to [A]keep you</div>
+<div class="chart">[F#m7]Satisfied and stayin&#x27; here with [B]me</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart">BRIDGE (instrumental): [E] [A] [F#m7] [B] [E]</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b></div>
+<div class="chart">[E]You were [F#m7]right all along</div>
+<div class="chart">[B]So help me hold [E]on</div>
+<div class="chart">[E] [A] [E] [A] [E] (tag to end)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-18" style="display:none"><div class="songhead"><div class="songnum">#19</div><h2>Amarillo by Morning</h2><div class="keybig">Key of D/E</div><div class="meta">R vocals, George Strait</div></div><div class="notes"><label>Gig notes</label><textarea data-note="18" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="warn">⚠ MODULATION: verses play in D; the song modulates UP to E at the third verse and stays in E to the end (well-known Strait arrangement). Marked below.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] [F#m] [G] [A] (x2)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 1 (key of D):</div>
+<div class="chart">[D]Amarillo by [F#m]mornin&#x27;, [G]up from [D]San Antone</div>
+<div class="chart">[D]Everything that [F#m]I got is [G]just what I [A]got on</div>
+<div class="chart">[G]When that sun is high in that [A]Texas sky</div>
+<div class="chart">[D]I&#x27;ll be buckin&#x27; at the [A]county [G]fair</div>
+<div class="chart">[D]Amarillo by [A]mornin&#x27;, Ama[G]rillo [A]I&#x27;ll be [D]there</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1, still D):</div>
+<div class="chart">[D]They took my saddle in [F#m]Houston, broke my [G]leg in [D]Santa Fe</div>
+<div class="chart">[D]Lost my wife and a [F#m]girlfriend [G]somewhere along the [A]way</div>
+<div class="chart">[G]Well, I&#x27;ll be lookin&#x27; for eight when they [A]pull that gate</div>
+<div class="chart">And I [D]hope that [A]judge ain&#x27;t [G]blind</div>
+<div class="chart">[D]Amarillo by [A]mornin&#x27;, Ama[G]rillo&#x27;s [A]on my [D]mind</div>
+<div class="sp"></div>
+<div class="chart">INSTRUMENTAL TURNAROUND → KEY CHANGE UP TO E:</div>
+<div class="chart">[D] [F#m] [G] [A] → [F#m7] [B] (ii–V into E)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (key of E):</div>
+<div class="chart">[E]Amarillo by [G#m]mornin&#x27;, [A]up from [E]San Antone</div>
+<div class="chart">[E]Everything that [G#m]I got is [A]just what I [B7]got on</div>
+<div class="chart">[A]I ain&#x27;t got a dime but [B7]what I got is mine</div>
+<div class="chart">I ain&#x27;t [E]rich but Lord [G#m]I&#x27;m [A]free</div>
+<div class="chart">[E]Amarillo by [B7]mornin&#x27;, Amar[A]illo&#x27;s where I&#x27;ll [B7]be [E] [A] [B7]</div>
+<div class="chart">[E]Amarillo by [B7]mornin&#x27;, Amar[A]illo&#x27;s where I&#x27;ll [B7]be [E]</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [E] [G#m] [A] [B7] (x2), end on [E]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-19" style="display:none"><div class="songhead"><div class="songnum">#20</div><h2>The South&#x27;s Gonna Do It Again</h2><div class="keybig">Key of A</div><div class="meta">W vocals, Charlie Daniels Band</div></div><div class="notes"><label>Gig notes</label><textarea data-note="19" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Up-tempo southern rock boogie. Spoken intro ad-lib: &quot;Here&#x27;s to you, Cole. Save your Confederate money.&quot;</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [A] [D] [A] [F7] [E7] [D7] [C7] [A]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]Well, the train to Grinder&#x27;s Switch is runnin&#x27; right on time</div>
+<div class="chart">And the Tucker boys are cookin&#x27; down in Caroline</div>
+<div class="chart">[D]People down in Florida can&#x27;t be still</div>
+<div class="chart">[A]When ol&#x27; Lynyrd Skynyrd&#x27;s pickin&#x27; down in Jacksonville</div>
+<div class="chart">[E]People down in Georgia come from [D]near and far</div>
+<div class="chart">[A]To hear Richard Betts pickin&#x27; on that red guitar</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]So gather round, gather round children</div>
+<div class="chart">Get down, well just get down children</div>
+<div class="chart">[D]Get loud, well you can be [A]loud and be proud</div>
+<div class="chart">And you can be proud here</div>
+<div class="chart">[E]Be proud you&#x27;re a rebel &#x27;cause the [D]South&#x27;s gonna [A]do it again</div>
+<div class="chart">And again</div>
+<div class="sp"></div>
+<div class="chart">INSTRUMENTAL (same as intro): [A] [D] [A] [F7] [E7] [D7] [C7] [A]</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1):</div>
+<div class="chart">[A]Elvin Bishop&#x27;s sittin&#x27; on a bale of hay</div>
+<div class="chart">He ain&#x27;t good-lookin&#x27;, but he sure can play</div>
+<div class="chart">[D]And there&#x27;s ZZ Top and you can&#x27;t forget</div>
+<div class="chart">[A]That old brother Willie&#x27;s gettin&#x27; soakin&#x27; wet</div>
+<div class="chart">[E]And all the good people down in [D]Tennessee</div>
+<div class="chart">[A]Are diggin&#x27; Barefoot Jerry and the CDB</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (same)</div>
+<div class="sp"></div>
+<div class="chart">OUTRO (instrumental to end): [A] [D] [A] [F7] [E7] [D7] [C7] [A]</div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="chart"># Gig Charts — Sat Oct 10, 2026 — Batch 3 (Songs 21–30)</div>
+<div class="sp"></div>
+<div class="chart">Chord-over-lyrics charts in bracket format. Capo-free exact keys as listed.</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-20" style="display:none"><div class="songhead"><div class="songnum">#21</div><h2>You&#x27;re Running Wild</h2><div class="keybig">Key of F</div><div class="meta">W&amp;T vocals, Emmylou Harris</div></div><div class="notes"><label>Gig notes</label><textarea data-note="20" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Country two-step feel. Wade directs diamonds on changes; ending TBD.</div>
+<div class="warn">⚠ Uses Wade&#x27;s emailed version — standard chart below; confirm arrangement at the gig.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [F] [F] (vamp two bars) — band hits diamonds on [C7] into verse</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE:</b></div>
+<div class="chart">[F]You&#x27;re running wild, [C7]how long can this go on</div>
+<div class="chart">[Bb]You&#x27;re leaving me a[C7]lone, [F]stop running wild</div>
+<div class="chart">[F]You&#x27;re always gone, my love you&#x27;ll never [C7]change</div>
+<div class="chart">[Bb]It&#x27;s more than I can [C7]bear, [F]stop running wild</div>
+<div class="chart">[C7]You&#x27;ll settle down someday and find I&#x27;ve [F]gone away</div>
+<div class="chart">[Bb]You&#x27;ll think of what you&#x27;ve [C7]done while running wild</div>
+<div class="chart">[F]You can&#x27;t go home, you&#x27;ll have to [C7]change your ways</div>
+<div class="chart">[Bb]You&#x27;ll have to go or stay, [C7]stop running [F]wild</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same as verse 1)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> diamonds on [F] — ending TBD (Wade calls it)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-21" style="display:none"><div class="songhead"><div class="songnum">#22</div><h2>Do Me with Love</h2><div class="keybig">Key of D</div><div class="meta">T vocals, Janie Fricke</div></div><div class="notes"><label>Gig notes</label><textarea data-note="21" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Ballad. Record modulates up a whole step for the final chorus: verses/chorus in D, FINAL CHORUS in E.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] vamp</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]Words are cheap and &quot;I love yous&quot; are [G]free</div>
+<div class="chart">So unless you [D]mean it, don&#x27;t spend them on [A7]me</div>
+<div class="chart">Don&#x27;t look [D]twice if you&#x27;re keeping [G]score</div>
+<div class="chart">&#x27;Cause heartaches are [D]high priced and [A7]I&#x27;ve paid it [D]before</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Do me with love, [G][D] don&#x27;t [G]do me wrong</div>
+<div class="chart">You know my [D]heart&#x27;s been broken [A7]too long</div>
+<div class="chart">And I&#x27;ve had [D]one too many tears to [G]fall</div>
+<div class="chart">So do me with [D]love, do me with [A7]love</div>
+<div class="chart">Or don&#x27;t do me at [D]all</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">[D]I&#x27;ve taken some wrong roads and I&#x27;ve lost [G]track</div>
+<div class="chart">Of lovers who [D]gave their hearts, then wanted them [A7]back</div>
+<div class="chart">So I [D]need someone who needs someone [G]too</div>
+<div class="chart">But spare me the [D]memories [A7]if you&#x27;re just passing [D]through</div>
+<div class="sp"></div>
+<div class="chart">FINAL CHORUS (modulate UP — key of E):</div>
+<div class="chart">[E]Do me with love, [A][E] don&#x27;t [A]do me wrong</div>
+<div class="chart">You know my [E]heart&#x27;s been broken [B7]too long</div>
+<div class="chart">And I&#x27;ve had [E]one too many tears to [A]fall</div>
+<div class="chart">So do me with [E]love, do me with [B7]love</div>
+<div class="chart">Or don&#x27;t do me at [E]all</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO/TAG:</b> repeat last two lines — [E]Do me with [B7]love, or don&#x27;t do me at [E]all — end on [E]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-22" style="display:none"><div class="songhead"><div class="songnum">#23</div><h2>Leavin&#x27; on Your Mind</h2><div class="keybig">Key of G</div><div class="meta">T vocals, Patsy Cline</div></div><div class="notes"><label>Gig notes</label><textarea data-note="22" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">6/8 ballad. Descending intro line (transposed: G–F#m–Em). Watch the (tacet) hits.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [G] [G] [F#m] [F#m] [Em] [Em]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D](tacet) n.c. — [G]If you&#x27;ve got leavin&#x27; on your mind</div>
+<div class="chart">Tell me now, [F#m]get it over</div>
+<div class="chart">[F#m]Hurt me now, [Em]get it over</div>
+<div class="chart">[A7]If you&#x27;ve got leavin&#x27; [D]on your mind</div>
+<div class="chart">[D]If there&#x27;s a new love in [G]your heart</div>
+<div class="chart">Tell me now, [F#m]get it over</div>
+<div class="chart">[F#m]Hurt me now, [Em]get it over</div>
+<div class="chart">[A7]If there&#x27;s a new love in [D]your [G]heart</div>
+<div class="sp"></div>
+<div class="chart"><b>BRIDGE:</b></div>
+<div class="chart">[D]Don&#x27;t leave me [G]here in a world</div>
+<div class="chart">Filled with [F#m]dreams that might have been</div>
+<div class="chart">Hurt me [G]now, get it over</div>
+<div class="chart">I [E7]may learn to love [A7]again</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (final):</div>
+<div class="chart">[D](tacet) n.c. — [G]If there&#x27;s a new love in your heart</div>
+<div class="chart">Tell me now, [F#m]get it over</div>
+<div class="chart">[F#m]Hurt me now, [Em]get it over</div>
+<div class="chart">[A7]If there&#x27;s a new love in [D]your [F#7]heart [F#7b5]</div>
+<div class="chart">[B7]Hurt me now, [Em]get it over</div>
+<div class="chart">[A7](tacet) n.c. — If there&#x27;s a new love in your [D]heart [G] [D/F#] [Em] [D]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-23" style="display:none"><div class="songhead"><div class="songnum">#24</div><h2>Old Flames</h2><div class="keybig">Key of B/C</div><div class="meta">D vocals, Dolly Parton</div></div><div class="notes"><label>Gig notes</label><textarea data-note="23" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">3/4 country waltz. ★ MODULATION: verse 1 + first chorus in B; verse 2 + final chorus UP a half step to C.</div>
+<div class="sp"></div>
+<div class="chart">VERSE 1 (Key of B):</div>
+<div class="chart">[B]Downtown tonight, I saw an old friend, someone [E]who</div>
+<div class="chart">I [F#7]used to take comfort from, long before I met [B]you</div>
+<div class="chart">I caught a spark from his [B7]eyes, a forgotten de[E]sire</div>
+<div class="chart">With a [F#7]word or a touch, I could have rekindled that [B]fire</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (Key of B):</div>
+<div class="chart">But [B]old flames can&#x27;t hold a candle to [E]you</div>
+<div class="chart">[F#7]No one can light up the night like you [B]do</div>
+<div class="chart">Flickering embers of love, I&#x27;ve known one or [E]two</div>
+<div class="chart">But [F#7]old flames can&#x27;t hold a candle to [B]you</div>
+<div class="sp"></div>
+<div class="chart"><b>★ MODULATE UP:</b> VERSE 2 (Key of C):</div>
+<div class="chart">[C]Sometimes at night I think of old lovers I&#x27;ve [F]known</div>
+<div class="chart">I [G7]remember how holding them helped me not feel so a[C]lone</div>
+<div class="chart">Then I feel you beside me and [C7]even their memories are [F]gone</div>
+<div class="chart">Like [G7]stars in the night, lost in the sweet light of [C]dawn</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (Key of C):</div>
+<div class="chart">But [C]old flames can&#x27;t hold a candle to [F]you</div>
+<div class="chart">[G7]No one can light up the night like you [C]do</div>
+<div class="chart">Flickering embers of love, I&#x27;ve known one or [F]two</div>
+<div class="chart">But [G7]old flames can&#x27;t hold a candle to [C]you</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> tag last line — But [G7]old flames can&#x27;t hold a candle to [C]you — end on [C]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-24" style="display:none"><div class="songhead"><div class="songnum">#25</div><h2>Pick Me Up on Your Way Down</h2><div class="keybig">Key of F#</div><div class="meta">D vocals, Charlie Walker</div></div><div class="notes"><label>Gig notes</label><textarea data-note="24" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">4/4 shuffle. Straight I–IV–V.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [F#] shuffle vamp</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[F#]You were mine for just a while</div>
+<div class="chart">Now you&#x27;re [B]puttin&#x27; on the style</div>
+<div class="chart">And you&#x27;ve [C#7]never once looked back</div>
+<div class="chart">At your home across the [F#]track</div>
+<div class="chart">You&#x27;re the gossip of the town</div>
+<div class="chart">But my [B]heart can still be found</div>
+<div class="chart">Where you [C#7]tossed it on the ground</div>
+<div class="chart">Pick me up on your way [F#]down</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[F#]Pick me up on your way down</div>
+<div class="chart">When you&#x27;re [B]blue and all alone</div>
+<div class="chart">When their [C#7]glamour starts to bore you</div>
+<div class="chart">Come on back where you [F#]belong</div>
+<div class="chart">You may be their pride and joy</div>
+<div class="chart">But they&#x27;ll [B]find another toy</div>
+<div class="chart">Then they&#x27;ll [C#7]take away your crown</div>
+<div class="chart">[F#]Pick me up on your way [B]down [F#]</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">[F#]They have changed your attitude</div>
+<div class="chart">Made you [B]haughty and so rude</div>
+<div class="chart">Your new [C#7]friends can take the blame</div>
+<div class="chart">Underneath you&#x27;re still the [F#]same</div>
+<div class="chart">When you learn these things are true</div>
+<div class="chart">I&#x27;ll be [B]waiting here for you</div>
+<div class="chart">As you [C#7]tumble to the ground</div>
+<div class="chart">Pick me up on your way [F#]down</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> end on [F#]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-25" style="display:none"><div class="songhead"><div class="songnum">#26</div><h2>Satin Sheets</h2><div class="keybig">Key of D</div><div class="meta">D vocals, Jeannie C. Riley / Jeanne Pruett</div></div><div class="notes"><label>Gig notes</label><textarea data-note="25" rows="3" placeholder="Reminders for this song...">Intro is an odd guitar riff. Not sure if we’ll do that. May just start together.</textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Moderate country ballad. Leads with the chorus.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] [D] (instrumental)</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Satin [D7]sheets to lie on</div>
+<div class="chart">[G]Satin pillows to cry on</div>
+<div class="chart">[D]Still I&#x27;m not [D7]happy, [A7]don&#x27;t you see</div>
+<div class="chart">[D]Big long [D7]Cadillac</div>
+<div class="chart">[G]Tailor-mades upon my back</div>
+<div class="chart">[D]Still I [A7]want you to set me [D]free</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE:</b></div>
+<div class="chart">[D]I&#x27;ve found an[D7]other man [G]who can give more than you can</div>
+<div class="chart">Though you&#x27;ve [D]given me [D7]everything money can [A7]buy</div>
+<div class="chart">[D]But your money [D7]can&#x27;t hold me tight</div>
+<div class="chart">[G]Like he does on a long, long night</div>
+<div class="chart">And [D]you know you [A7]couldn&#x27;t keep me satis[D]fied</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> repeat chorus to fade — end on [D]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-26" style="display:none"><div class="songhead"><div class="songnum">#27</div><h2>Family Tradition</h2><div class="keybig">Key of D</div><div class="meta">R vocals, Hank Williams Jr.</div></div><div class="notes"><label>Gig notes</label><textarea data-note="26" rows="3" placeholder="Reminders for this song...">Start together</textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Straight-ahead country rock. Guitar solo = one verse form.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] [D] (vamp)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]Country music singers have always been a [G]real close family</div>
+<div class="chart">[A7]But lately some of my kinfolk have disowned a few others and [D]me</div>
+<div class="chart">I guess it&#x27;s because I [G]kinda changed my direction</div>
+<div class="chart">[A7]Lord, I guess I went and broke their family [D]tradition</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]&quot;Why do you drink? [G]Why do you roll smoke?</div>
+<div class="chart">[A7]Why must you live out the songs that you [D]wrote?&quot;</div>
+<div class="chart">Over and over, [G]everybody made my prediction</div>
+<div class="chart">[A7]So if I get stoned, I&#x27;m just carryin&#x27; on an old family [D]tradition</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">[D]I am very proud of my [G]daddy&#x27;s name</div>
+<div class="chart">[A7]Although his kind of music and mine ain&#x27;t exactly the [D]same</div>
+<div class="chart">Stop and think it over, [G]put yourself in my position</div>
+<div class="chart">[A7]If I get stoned and sing all night long, it&#x27;s a family [D]tradition</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 2 (same chords as chorus):</div>
+<div class="chart">[D]&quot;Why do you drink? [G]Why do you roll smoke?</div>
+<div class="chart">[A7]Why must you live out the songs that you [D]wrote?&quot;</div>
+<div class="chart">If I&#x27;m down in a honky tonk and [G]some ole slick&#x27;s tryin&#x27; to give me friction</div>
+<div class="chart">[A7]I say leave me alone, I&#x27;m singin&#x27; all night long, it&#x27;s a family [D]tradition</div>
+<div class="sp"></div>
+<div class="chart"><b>SOLO:</b> one verse form ([D] [G] [A7] [D] ...)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same chords as verse 1):</div>
+<div class="chart">[D]Lordy, I have loved some ladies and I have loved [G]Jim Beam</div>
+<div class="chart">[A7]They both tried to kill me in nineteen seventy-[D]three</div>
+<div class="chart">When that doctor asked me [G]&quot;Son, how&#x27;d you get in this condition?&quot;</div>
+<div class="chart">[A7]I said &quot;Hey Sawbones, I&#x27;m just carryin&#x27; on an old family [D]tradition&quot;</div>
+<div class="sp"></div>
+<div class="chart">CHORUS 3 (same as chorus 2)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> end on [D]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-27" style="display:none"><div class="songhead"><div class="songnum">#28</div><h2>Before You Accuse Me</h2><div class="keybig">Key of A</div><div class="meta">R vocals, Eric Clapton</div></div><div class="notes"><label>Gig notes</label><textarea data-note="27" rows="3" placeholder="Reminders for this song...">Intro is a guitar riff in A</textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Straight 12-bar blues shuffle, |: A7 | D7 | A7 | A7 | D7 | D7 | A7 | A7 | E7 | D7 | A7 | E7 :| (Clapton&#x27;s Journeyman arrangement transposed from E to A).</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> 12-bar instrumental over the pattern — standard open-A shuffle riff:</div>
+<div class="chart">```</div>
+<div class="chart">e|------------------------------------------|</div>
+<div class="chart">B|------------------------------------------|</div>
+<div class="chart">G|------------------------------------------|</div>
+<div class="chart">D|------------------------------------------|</div>
+<div class="chart">A|-----0--2--3--2--0--------0--2--3--2--0----|</div>
+<div class="chart">E|--0----------------0---0----------------0-|</div>
+<div class="chart">   (repeat; play on D string over D7 bars, E string feel over E7 bar)</div>
+<div class="chart">```</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A7]Before you accuse me, [D7]take a look at your[A7]self</div>
+<div class="chart">[D7]Before you accuse me, take a look at your[A7]self</div>
+<div class="chart">[E7]You say I&#x27;m spendin&#x27; my money on other women</div>
+<div class="chart">[D7]You&#x27;re takin&#x27; money [A7]from someone [E7]else</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 2:</b></div>
+<div class="chart">[A7]I called your mama, [D7]&#x27;bout three or four nights a[A7]go</div>
+<div class="chart">[D7]I called your mama, &#x27;bout three or four nights a[A7]go</div>
+<div class="chart">[E7]Your mama said &quot;Son, [D7]don&#x27;t you call my daughter no [A7]more&quot; [E7]</div>
+<div class="sp"></div>
+<div class="chart"><b>SOLO:</b> 12 bars</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 3:</b></div>
+<div class="chart">[A7]Come back home baby, [D7]try my love one more [A7]time</div>
+<div class="chart">[D7]Come back home baby, try my love one more [A7]time</div>
+<div class="chart">[E7]You know when things don&#x27;t go to suit you</div>
+<div class="chart">[D7]I think I&#x27;ll lose my [A7]mind [E7]</div>
+<div class="sp"></div>
+<div class="chart"><b>SOLO/OUTRO:</b> 12 bars — end on [A7]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-28" style="display:none"><div class="songhead"><div class="songnum">#29</div><h2>Amanda</h2><div class="keybig">Key of A</div><div class="meta">R vocals, Don Williams</div></div><div class="notes"><label>Gig notes</label><textarea data-note="28" rows="3" placeholder="Reminders for this song...">Intro is an acoustic guitar riff walk down in A</textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Gentle 4/4 ballad. Simple I–IV–V.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [A] [E] [A]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]I&#x27;ve held it all inward, [D]Lord knows I&#x27;ve [A]tried</div>
+<div class="chart">But it&#x27;s an [A]awful awakenin&#x27; in a [E]country boy&#x27;s [A]life</div>
+<div class="chart">[A]To look in the mirror in [D]total sur[A]prise</div>
+<div class="chart">At the [A]hair on your shoulders and the [E]age in your [A]eyes</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]Amanda, [D]light of my [A]life</div>
+<div class="chart">[A]Fate should have made you a [E]gentleman&#x27;s [A]wife</div>
+<div class="chart">[A]Amanda, [D]light of my [A]life</div>
+<div class="chart">[A]Fate should have made you a [E]gentleman&#x27;s [A]wife</div>
+<div class="sp"></div>
+<div class="chart"><b>INSTRUMENTAL:</b> [A] [D] [A] / [A] [E] [A]</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">[A]It&#x27;s a measure of people who [D]don&#x27;t under[A]stand</div>
+<div class="chart">The pleasures of life in a [E]hillbilly [A]band</div>
+<div class="chart">[A]I got my first guitar when [D]I was four[A]teen</div>
+<div class="chart">Now [A]I&#x27;m crowding thirty and [E]still wearin&#x27; [A]jeans</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat x2)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [E7] [A] — end on [A]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-29" style="display:none"><div class="songhead"><div class="songnum">#30</div><h2>Lache pas la patate (The Potato Song)</h2><div class="keybig">Key of D</div><div class="meta">W vocals, Cajun traditional</div></div><div class="notes"><label>Gig notes</label><textarea data-note="29" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart">Cajun two-step — accordion/fiddle-driven. Two-chord bounce (D/G) throughout; the record adds an occasional Bm on the turnaround — match Wade&#x27;s feel.</div>
+<div class="warn">⚠ Uses Wade&#x27;s emailed version — standard chart below; confirm arrangement at the gig.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> [D] [G] [D] [G] (accordion/fiddle break)</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Hey, lâches pas la patate mon neg&#x27;, [G]lâches pas la patate</div>
+<div class="chart">[D]Une chose qu&#x27;est claire, j&#x27;fais mon affaire et [G]j&#x27;lâche pas la patate [D]</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]J&#x27;vas au bal tous les samedis, pour [G]escouer mes vieilles pattes</div>
+<div class="chart">[D]J&#x27;danse avec toutes les belles filles et [G]j&#x27;lâche pas la patate</div>
+<div class="chart">[D]J&#x27;fais tous les clubs j&#x27;peux faire ent&#x27; La[G]fayette et la Ville Plate</div>
+<div class="chart">[D]Oublies-moi pas des fois ça chauffe, mais [G]j&#x27;lâche pas la patate [D]</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 2:</b></div>
+<div class="chart">[D]Chu pas marié, j&#x27;ai pas personne pour m&#x27;[G]tiendre le fond d&#x27;culotte</div>
+<div class="chart">[D]Quand j&#x27;veux partir chu &quot;gone vieux j&#x27;tons&quot; et [G]j&#x27;lâche pas la patate</div>
+<div class="chart">[D]J&#x27;vas mon tout seul la moitié du temps mais [G]quand l&#x27;idée me frappe</div>
+<div class="chart">[D]J&#x27;appelle Marie, la chère petite fille mais [G]j&#x27;lâche pas la patate [D]</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 3:</b></div>
+<div class="chart">[D]Un soir au bal un petit bougre et un [G]gros après à s&#x27;battre</div>
+<div class="chart">[D]J&#x27;voulais le petit bougre gagne et j&#x27;criais [G]&quot;Lâche pas la patate&quot;</div>
+<div class="chart">[D]Le gros bougre m&#x27;a regardé et dit &quot;Es[G]père que j&#x27;te rattrape&quot;</div>
+<div class="chart">[D]J&#x27;m&#x27;ai viré de bord, j&#x27;ai couru fort, j&#x27;ai [G]lâché la patate [D]</div>
+<div class="sp"></div>
+<div class="chart"><b>FINAL CHORUS:</b></div>
+<div class="chart">[D]Hey, j&#x27;ai lâché la patate mon neg&#x27;, [G]j&#x27;ai lâché la patate</div>
+<div class="chart">[D]Une chose qu&#x27;est claire, j&#x27;fais mon affaire et [G]j&#x27;ai lâché la patate [D]</div>
+<div class="chart">[D]Hey, lâches pas la patate mon neg&#x27;, [G]lâches pas la patate</div>
+<div class="chart">[D]Une chose qu&#x27;est claire, j&#x27;fais mon affaire et [G]j&#x27;lâche pas la patate [D]</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b> [D] (cold stop — confirm with Wade)</div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="chart"># Gig Charts — Batch 4 (Songs 31–40) — Sat Oct 10, 2026</div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-30" style="display:none"><div class="songhead"><div class="songnum">#31</div><h2>Please Release Me</h2><div class="keybig">Key of G</div><div class="meta">W vocals, Ray Price</div></div><div class="notes"><label>Gig notes</label><textarea data-note="30" rows="3" placeholder="Reminders for this song...">Fiddle intro. 1/5/1.</textarea></div><div class="chartbody"><div class="chart">4/4 shuffle; solos over verse form (no chorus — strophic)</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | G | C | D7 | G |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[G]Please release me, let me [C]go</div>
+<div class="chart">[D7]For I don&#x27;t love you any[G]more</div>
+<div class="chart">To waste our lives would be a [C]sin</div>
+<div class="chart">[C#dim]Re[G/D]lease me, and [D7]let me love [G]again.</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">I have found a new love, dear</div>
+<div class="chart">And I will always want her near</div>
+<div class="chart">Her lips are warm while yours are cold</div>
+<div class="chart">Release me, my darling, let me go.</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same chords as verse 1):</div>
+<div class="chart">Please release me, can&#x27;t you see</div>
+<div class="chart">You&#x27;d be a fool to cling to me</div>
+<div class="chart">To live a lie would bring us pain</div>
+<div class="chart">So release me and let me love again.</div>
+<div class="sp"></div>
+<div class="chart">VERSE 4 / TAG (same chords as verse 1):</div>
+<div class="chart">Please release me, let me go</div>
+<div class="chart">For I don&#x27;t love you anymore</div>
+<div class="chart">To live together is a sin</div>
+<div class="chart">Release me and let me love again.</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-31" style="display:none"><div class="songhead"><div class="songnum">#32</div><h2>Blue Rose Is</h2><div class="keybig">Key of D</div><div class="meta">T vocals, Pam Tillis</div></div><div class="notes"><label>Gig notes</label><textarea data-note="31" rows="3" placeholder="Reminders for this song...">Intro together. GGD  GGD </textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | G | D | G | D |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]Her lips and her dress, they&#x27;re both [G]ruby [D]red</div>
+<div class="chart">[A7]She thinks that&#x27;s how you hide [G]the pain you feel [D]in[A7]side</div>
+<div class="chart">[D]And she comes out every night to [G]soak up the [D]neon light</div>
+<div class="chart">[A7]Her perfume fills the air, [G]people stop and [D]stare, [A7]but...</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[D]Blue Rose is looking for the moon in someone&#x27;s [A7]eyes</div>
+<div class="chart">[D]Blue Rose is willing to believe someone&#x27;s lies</div>
+<div class="chart">[D7]Now Blue Rose&#x27;s petals have been [G]crushed along the way</div>
+<div class="chart">[A7]Oh, Blue Rose is just growing bluer every [D]day</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">One more drink, one more dance, you might be her only chance</div>
+<div class="chart">She needs someone to hold when the night is growing old</div>
+<div class="chart">And if you don&#x27;t mind the thorns, she&#x27;ll take you in and keep you warm</div>
+<div class="chart">Lying in the dark in a bed of broken hearts, &#x27;cause...</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO/TAG:</b></div>
+<div class="chart">[A7]Now, Blue Rose is just growing bluer every [G]day [D]</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-32" style="display:none"><div class="songhead"><div class="songnum">#33</div><h2>I&#x27;d Do It All Over Again</h2><div class="keybig">Key of D</div><div class="meta">T vocals, Crystal Gayle</div></div><div class="notes"><label>Gig notes</label><textarea data-note="32" rows="3" placeholder="Reminders for this song...">Piano part done on guitar, walk down from the D</textarea></div><div class="chartbody"><div class="chart">Published title is &quot;I&#x27;ll Do It All Over Again&quot; (McDill/Holyfield); signature descending bass line in chorus</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | D | Bm | D | G | D Em | A |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[D]Was I right? [A]Was I wrong? [G]A little too weak or a little too [A]strong?</div>
+<div class="chart">[D]Was it him? [A]Was it me? [G]Oh, I guess I&#x27;ll never [A]know</div>
+<div class="chart">[D]Well, you&#x27;re up then you&#x27;re [A]down, [G]oh, but the world keeps turnin&#x27; a[A]round</div>
+<div class="chart">[D]Ain&#x27;t it [A]hard to find [G]somethin&#x27; to [A]hang [D]on to?</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b> (walkdown: D–D/C#–Bm–Bm/A, then G–G/F#–Bm–A)</div>
+<div class="chart">[D]But I [D/C#]know that my [Bm]heart will [Bm/A]mend</div>
+<div class="chart">[G]And I [G/F#]know that I&#x27;ll [Bm]smile a[A]gain</div>
+<div class="chart">[D]I&#x27;ll get [D/C#]back on my [Bm]feet and [Bm/A]then</div>
+<div class="chart">[G]I&#x27;ll do it [A]all over a[D]gain</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">Some you lose, some you win</div>
+<div class="chart">They say that&#x27;s the way it&#x27;s always been</div>
+<div class="chart">First you laugh, then you cry</div>
+<div class="chart">Oh, but I guess that&#x27;s life</div>
+<div class="chart">So you live, and you learn</div>
+<div class="chart">And never look back at the bridges you burn</div>
+<div class="chart">And you change somehow</div>
+<div class="chart">Oh, I&#x27;m a little bit wiser now</div>
+<div class="sp"></div>
+<div class="chart">CHORUS x2 to end (final line: &quot;I&#x27;ll do it all over again!&quot;)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-33" style="display:none"><div class="songhead"><div class="songnum">#34</div><h2>Take It Easy Lovin&#x27; Me</h2><div class="keybig">Key of D</div><div class="meta">T vocals, Crystal Gayle</div></div><div class="notes"><label>Gig notes</label><textarea data-note="33" rows="3" placeholder="Reminders for this song...">Intro hit A and hold then together on D</textarea></div><div class="chartbody"><div class="warn">⚠ Lyric check: the UG tab for Gayle&#x27;s recording gives verse 1 as &quot;Many is the man who&#x27;ll drive himself crazy tonight / Over some kind of a woman who he says ain&#x27;t treatin&#x27; him right&quot;; GuitarTuna shows a gender-flipped version (&quot;Many&#x27;s the woman who&#x27;s cried herself crazy at night&quot;). Chords below are verified and identical in both sources — confirm which lyric the band sings.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | A7 | D | G | D | (chorus chords)</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A7]Take it [D]easy [G]lovin&#x27; me</div>
+<div class="chart">[D]Don&#x27;t start thinkin&#x27; I&#x27;m something that I&#x27;ll [A7]never be</div>
+<div class="chart">[D]Just need me as much as [G]need be</div>
+<div class="chart">[D]Take it [A7]e-a-[D]s-y lovin&#x27; me</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[G]Many is the man who&#x27;ll drive himself crazy tonight</div>
+<div class="chart">[A7]Over some kind of a woman who he says ain&#x27;t [D]treatin&#x27; him right</div>
+<div class="chart">[G]Expect that of someone is quick to be takin&#x27; its toll</div>
+<div class="chart">[A7]And if you&#x27;re not careful you&#x27;ll wake up [D]lonely and old</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">Now dreamin&#x27; and plannin&#x27; are things I guess all of us do</div>
+<div class="chart">And sooner or later we all play the part of a fool</div>
+<div class="chart">But those in a hurry to unpack their bag full of dreams</div>
+<div class="chart">Are quick to be victims of the lies and lusts and the schemes</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO/TAG:</b></div>
+<div class="chart">[G]Take it [A7]easy [G]lov[D]in&#x27; me</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-34" style="display:none"><div class="songhead"><div class="songnum">#35</div><h2>You&#x27;re Stronger Than Me</h2><div class="keybig">Key of Ab</div><div class="meta">D vocals, Patsy Cline</div></div><div class="notes"><label>Gig notes</label><textarea data-note="34" rows="3" placeholder="Reminders for this song...">Intro guitar walk up from Ab</textarea></div><div class="chartbody"><div class="chart">4/4 shuffle</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | Ab | Db | Eb7 | Ab |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[Ab]If you are sincere [Db]when you say you [Eb7]don&#x27;t care</div>
+<div class="chart">[Db]That our [Eb7]love is just a [Ab]memory</div>
+<div class="chart">[Db]If the love that we [Eb7]knew won&#x27;t bother you</div>
+<div class="chart">[Db]Dar[Eb7]ling, you&#x27;re [Ab]stronger than me</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[Bb7]For if still [Eb7]lovin&#x27; you means I&#x27;m weak, then I&#x27;m weak</div>
+<div class="chart">[Bb7]For I still [Eb7]fall apart when we speak or we meet</div>
+<div class="chart">[Ab]If the [Db]love that we [Eb7]knew won&#x27;t bother you</div>
+<div class="chart">[Db]Dar[Eb7]lin&#x27;, you&#x27;re [Ab]stronger than me</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">If you can have fun with some other one</div>
+<div class="chart">With no thought of what used to be</div>
+<div class="chart">If it&#x27;s easy to say that it&#x27;s better this way</div>
+<div class="chart">Darling you&#x27;re stronger than me</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-35" style="display:none"><div class="songhead"><div class="songnum">#36</div><h2>I Fall to Pieces</h2><div class="keybig">Key of Bb</div><div class="meta">D vocals, Patsy Cline</div></div><div class="notes"><label>Gig notes</label><textarea data-note="35" rows="3" placeholder="Reminders for this song...">Intro guitar walk up from Bb</textarea></div><div class="chartbody"><div class="chart">Patsy&#x27;s record is in E; this chart is in Bb per setlist</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | Bb | Bb | Eb | F F7 | Bb | Bb7 |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b> (walkdown on &quot;pieces&quot;: F – E – Eb)</div>
+<div class="chart">[Bb]I [Eb]fall to [F]pieces [E] [Eb]</div>
+<div class="chart">[Eb]Each time I [F]see you a[F7]gain [Bb] [Bb7]</div>
+<div class="chart">[Bb]I [Eb]fall to [F]pieces [E] [Eb]</div>
+<div class="chart">[Eb]How can I [F7]be just your [Bb]friend?</div>
+<div class="sp"></div>
+<div class="chart"><b>BRIDGE:</b></div>
+<div class="chart">[Bb]You want me to [Bb7]act like we&#x27;ve never [Eb]kissed</div>
+<div class="chart">[F]You want me to for[F7]get, pretend we&#x27;ve never [Bb]met</div>
+<div class="chart">[Eb]And I&#x27;ve tried and I&#x27;ve [F7]tried but I [Bb]haven&#x27;t yet</div>
+<div class="chart">[Bb]You [Eb]walk by and [F]I [F7]fall to [Bb]pieces</div>
+<div class="sp"></div>
+<div class="chart">Turnaround: intro chords, instrumental</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords and lyrics as verse 1 — the song repeats)</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG/OUTRO:</b></div>
+<div class="chart">[Bb]You [Eb]walk by and [F]I [F7]fall to [Bb]pieces</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-36" style="display:none"><div class="songhead"><div class="songnum">#37</div><h2>Send Me the Pillow That You Dream On</h2><div class="keybig">Key of Eb</div><div class="meta">D vocals, Hank Locklin</div></div><div class="notes"><label>Gig notes</label><textarea data-note="36" rows="3" placeholder="Reminders for this song...">Intro guitar Eb 
+Arpeggios on chorus</textarea></div><div class="chartbody"><div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | Eb | Ab | Eb | Bb | Eb |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE:</b></div>
+<div class="chart">[Ab]Each night while I&#x27;m [Eb]sleeping oh so lonely</div>
+<div class="chart">[Bb]I&#x27;ll share your loving dreams that [Eb]once were true</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[Eb]Send me the [Ab]pillow that you [Eb]dream on</div>
+<div class="chart">[Bb]Don&#x27;t you know that I [Bb7]still care for [Eb]you</div>
+<div class="chart">[Eb]Send me the [Ab]pillow that you [Eb]dream on</div>
+<div class="chart">[Eb]So darling [Bb]I can dream on it [Eb]too</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">I&#x27;ve waited so long for you to write me</div>
+<div class="chart">But just a memory&#x27;s all that&#x27;s left of me</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>TAG:</b></div>
+<div class="chart">[Eb]So darling [Bb]I can dream on it [Eb]too</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-37" style="display:none"><div class="songhead"><div class="songnum">#38</div><h2>I Can&#x27;t Get You Off of My Mind</h2><div class="keybig">Key of C</div><div class="meta">T vocals, Patty Loveless</div></div><div class="notes"><label>Gig notes</label><textarea data-note="37" rows="3" placeholder="Reminders for this song...">Intro Fiddle  4 4 1 1 1 5 1
+Hank Williams feel</textarea></div><div class="chartbody"><div class="chart">Same tempo as her recording (not her exact arrangement); 4/4 swing feel on solos and the final vocal pass. Hank Williams tune — one repeating form; intro starts on the 4.</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | F | C | G7 | C |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[C]Well I can&#x27;t get you [G7]off of my [C]mind</div>
+<div class="chart">[G7]When I try, I&#x27;m just wastin&#x27; my time</div>
+<div class="chart">[C]Well I&#x27;ve tried and I&#x27;ve tried</div>
+<div class="chart">[F]And all night long I&#x27;ve [C]cried</div>
+<div class="chart">[G7]But I can&#x27;t get you off of my [C]mind</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">Well you think you would leave me behind</div>
+<div class="chart">But I guess you&#x27;re the good timin&#x27; kind</div>
+<div class="chart">Do you think that it&#x27;s smart</div>
+<div class="chart">To jump from heart to heart</div>
+<div class="chart">But I can&#x27;t get you off of my mind</div>
+<div class="sp"></div>
+<div class="chart">Solos (fiddle/steel) over verse form — swing feel</div>
+<div class="sp"></div>
+<div class="chart">VERSE 3 (same chords as verse 1):</div>
+<div class="chart">You believe that a true love is blind</div>
+<div class="chart">So you fool every new love you find</div>
+<div class="chart">You&#x27;ve got stars in your eyes</div>
+<div class="chart">But they can&#x27;t hide your lies</div>
+<div class="chart">But I can&#x27;t get you off of my mind</div>
+<div class="sp"></div>
+<div class="chart">FINAL VOCAL PASS (same chords, swing feel):</div>
+<div class="chart">Well I can&#x27;t get you off of my mind</div>
+<div class="chart">When I try, I&#x27;m just wastin&#x27; my time</div>
+<div class="chart">Well I&#x27;ve tried and I&#x27;ve tried</div>
+<div class="chart">And all night long I&#x27;ve cried</div>
+<div class="chart">But I can&#x27;t get you off of my mind — but I can&#x27;t, no I can&#x27;t</div>
+<div class="chart">And I&#x27;ve tried and I&#x27;ve tried</div>
+<div class="chart">But I can&#x27;t get you off of my mind</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-38" style="display:none"><div class="songhead"><div class="songnum">#39</div><h2>Unwound</h2><div class="keybig">Key of A</div><div class="meta">R vocals, George Strait</div></div><div class="notes"><label>Gig notes</label><textarea data-note="38" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Chart in A per setlist (Strait&#x27;s record is in Bb)</div>
+<div class="sp"></div>
+<div class="chart"><b>INTRO:</b> | A | A | A | E | A |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[A]Give me a bottle, [E]of your very [A]best</div>
+<div class="chart">[A]&#x27;Cause I&#x27;ve got a problem, I&#x27;m gonna drink off my [E]chest</div>
+<div class="chart">[E]I&#x27;m gonna spend the night, [A]gettin&#x27; [D]down</div>
+<div class="chart">[D]&#x27;Cause that woman that I had [A]wrapped around my finger just [E]come un[A]wound</div>
+<div class="sp"></div>
+<div class="chart"><b>CHORUS:</b></div>
+<div class="chart">[A]That woman that I had wrapped [D]around my finger just come un[A]wound</div>
+<div class="chart">[A]She kicked me out of the house and tonight I&#x27;m whiskey [E]bound</div>
+<div class="chart">[E]Well I&#x27;m gonna [A]be the drunkest fool in [D]town</div>
+<div class="chart">[D]&#x27;Cause that woman that I had [A]wrapped around my finger just [E]come un[A]wound</div>
+<div class="sp"></div>
+<div class="chart"><b>BREAK:</b> | A | A | E | A |</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">Well she packed my bags, and opened up the door</div>
+<div class="chart">And I got a feeling, she didn&#x27;t want me around no more</div>
+<div class="chart">She caught me in a lie, when I was messin&#x27; around</div>
+<div class="chart">And that woman that I had wrapped around my finger just come unwound</div>
+<div class="sp"></div>
+<div class="chart">CHORUS (repeat)</div>
+<div class="sp"></div>
+<div class="chart"><b>OUTRO:</b></div>
+<div class="chart">[D]And that woman that I had [A]wrapped around my finger just [E]come un[A]wound</div>
+<div class="chart">| A | A | A | E | A |</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<section class="song" id="song-39" style="display:none"><div class="songhead"><div class="songnum">#40</div><h2>Four or Five Times</h2><div class="keybig">Key of Eb</div><div class="meta">W vocals, Buddy Emmons</div></div><div class="notes"><label>Gig notes</label><textarea data-note="39" rows="3" placeholder="Reminders for this song..."></textarea></div><div class="chartbody"><div class="chart">Wade intro; Wade calls the ending. 4/4 swing throughout.</div>
+<div class="warn">⚠ Changes below are the standard western-swing changes for this tune (I–II7–V7: Eb–F7–Bb7–Eb); each chord gets ~2 bars and the form repeats. Exact vocal lines vary by version — lyric here follows the standard Bob Wills-era form; follow Wade on the intro and the ending.</div>
+<div class="sp"></div>
+<div class="chart">INTRO (Wade): | Eb | F7 | Bb7 | Eb |</div>
+<div class="sp"></div>
+<div class="chart"><b>VERSE 1:</b></div>
+<div class="chart">[Eb]Oh, four or five times (four or five times), [F7]maybe four or five times (maybe four or five times)</div>
+<div class="chart">[Bb7]Maybe tonight, still doin&#x27; right, [Eb]four or five times (four or five times)</div>
+<div class="chart">[Eb]And maybe I&#x27;ll sigh (and maybe I&#x27;ll sigh), [F7]and maybe I&#x27;ll cry (and maybe I&#x27;ll cry)</div>
+<div class="chart">[Bb7]But if I die, I&#x27;m gonna try, [Eb]four or five times (oh, four or five times)</div>
+<div class="sp"></div>
+<div class="chart">Solos over verse form — swing</div>
+<div class="sp"></div>
+<div class="chart">VERSE 2 (same chords as verse 1):</div>
+<div class="chart">Oh, four or five times (four or five times), baby four or five times (four or five times)</div>
+<div class="chart">I mean tonight, doin&#x27; things right, four or five times (oh, four or five times)</div>
+<div class="chart">I&#x27;m never a flop (never a flop), I started on top (started on top)</div>
+<div class="chart">Just kept strollin&#x27;, kept the ball rollin&#x27;, four or five times (oh, four or five times)</div>
+<div class="sp"></div>
+<div class="chart">OUTRO (Wade calls it): tag the last line, end on Eb</div>
+<div class="sp"></div>
+<div class="sp"></div></div></section>
+<div id="counter"></div>
+</div>
+<script>
+const songs=[...document.querySelectorAll('.song')];
+const index=document.getElementById('index');
+const counter=document.getElementById('counter');
+let cur=-1;
+function show(i){
+  if(i<-1||i>=songs.length)return;
+  cur=i;
+  index.style.display=i===-1?'block':'none';
+  songs.forEach((s,k)=>s.style.display=k===i?'block':'none');
+  counter.textContent=i===-1?'':`Song ${i+1} of ${songs.length}`;
+  window.scrollTo(0,0);
+}
+document.getElementById('prev').onclick=()=>show(cur<=-1?songs.length-1:cur-1);
+document.getElementById('next').onclick=()=>show(cur>=songs.length-1?-1:cur+1);
+document.getElementById('home').onclick=()=>show(-1);
+document.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();show(+a.dataset.go);});
+let x0=null;
+document.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{
+  if(x0===null)return;
+  const dx=e.changedTouches[0].clientX-x0;x0=null;
+  if(Math.abs(dx)>60){dx<0?document.getElementById('next').click():document.getElementById('prev').click();}
+},{passive:true});
+// notes: baked-in defaults stand unless this device has newer saved values
+document.querySelectorAll('textarea[data-note]').forEach(ta=>{
+  const k='kelvin-gig-note-'+ta.dataset.note;
+  try{
+    const v=localStorage.getItem(k);
+    if(v!==null)ta.value=v;
+    ta.addEventListener('input',()=>{
+      localStorage.setItem(k,ta.value);
+      document.querySelectorAll('textarea[data-note="'+ta.dataset.note+'"]').forEach(o=>{if(o!==ta)o.value=ta.value;});
+    });
+  }catch(e){}
+});
+
+// Intro audio clips: 0-based song index -> file under audio/.
+// To add a clip: drop the mp3 in audio/, add one line here, add the file to sw.js ASSETS.
+const INTRO_CLIPS={"4":"audio/05-someday-soon.mp3","5":"audio/06-im-down-to-my-last-cigarette.mp3"};
+const _players={};
+function _paintIntro(){
+  document.querySelectorAll('.intro-btn').forEach(b=>{
+    const p=_players[b.dataset.intro], playing=p&&!p.paused;
+    b.classList.toggle('playing',!!playing);
+    b.innerHTML=playing?'&#10074;&#10074; Playing':'&#9654; Intro';
+  });
+}
+function _toggleIntro(idx){
+  let p=_players[idx];
+  if(!p){p=new Audio(INTRO_CLIPS[idx]);p.preload='auto';_players[idx]=p;
+    p.onended=_paintIntro;}
+  if(p.paused){
+    Object.keys(_players).forEach(k=>{if(k!==String(idx)&&_players[k]&&!_players[k].paused)_players[k].pause();});
+    p.play().catch(()=>{});
+  }else{p.pause();}
+  _paintIntro();
+}
+Object.keys(INTRO_CLIPS).forEach(idx=>{
+  const link=document.querySelector('.idx-block a[data-go="'+idx+'"]');
+  if(link){const b=document.createElement('button');
+    b.className='intro-btn idx-intro';b.dataset.intro=idx;b.innerHTML='&#9654; Intro';
+    b.setAttribute('aria-label','Play intro clip');
+    b.onclick=e=>{e.preventDefault();e.stopPropagation();_toggleIntro(idx);};
+    link.insertAdjacentElement('afterend',b);}
+  const head=document.querySelector('#song-'+idx+' .songhead');
+  if(head){const b=document.createElement('button');
+    b.className='intro-btn song-intro';b.dataset.intro=idx;b.innerHTML='&#9654; Intro';
+    b.setAttribute('aria-label','Play intro clip');
+    b.onclick=()=>_toggleIntro(idx);
+    head.appendChild(b);}
+});
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script></body></html>
